@@ -15,23 +15,57 @@ describe("Activate", function() {
 		}
 	};
 
-	it("should activate the module when included", function() {
-		var c = Spine.Module.sub();
-		c.include(mod1);
+	var parent, child;
 
-		var d = new c();
+	var Tests = function() {
+		it("should activate the module when included", function() {
+			parent.include(mod1);
 
-		expect(d.mod1activated).toBe(true);
+			var child = new parent();
+
+			expect(child.mod1activated).toBe(true);
+		});
+
+		it("should activate multiple modules when included", function() {
+			parent.include(mod1);
+			parent.include(mod2);
+
+			var child = new parent();
+
+			expect(child.mod1activated).toBe(true);
+			expect(child.mod2activated).toBe(true);
+		});
+	};
+
+	describe("for Spine.Module", function() {
+		beforeEach(function() {
+			parent = Spine.Module.sub();
+		});
+
+		Tests();
 	});
 
-	it("should activate multiple modules when included", function() {
-		var c = Spine.Module.sub();
-		c.include(mod1);
-		c.include(mod2);
+	describe("for Spine.Model", function() {
+		beforeEach(function() {
+			parent = Spine.Model.sub();
+		});
 
-		var d = new c();
+		Tests();
 
-		expect(d.mod1activated).toBe(true);
-		expect(d.mod2activated).toBe(true);
+		it("should activate the module when included on create", function() {
+			parent.include(mod1);
+
+			var child = parent.create();
+
+			expect(child.mod1activated).toBe(true);
+		});
+	});
+
+	describe("for Spine.Controller", function() {
+		beforeEach(function() {
+			parent = Spine.Controller.sub();
+		});
+
+		Tests();
 	});
 });

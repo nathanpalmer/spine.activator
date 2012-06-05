@@ -1,5 +1,5 @@
 (function() {
-  var Module, Spine, moduleKeywords, proto;
+  var Spine, construct, ctor, moduleKeywords;
   var __indexOf = Array.prototype.indexOf || function(item) {
     for (var i = 0, l = this.length; i < l; i++) {
       if (this[i] === item) return i;
@@ -8,27 +8,25 @@
   };
   Spine = window.Spine;
   moduleKeywords = ['included', 'extended'];
-  Module = (function() {
-    Module.prototype.activators = [];
-    function Module() {
-      var activator, _i, _len, _ref;
-      console.log("test");
-      _ref = this.activators;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        activator = _ref[_i];
-        if (typeof this[activator] === "function") {
-          this[activator]();
-        }
-      }
-      if (typeof this.init === "function") {
-        this.init.apply(this, arguments);
+  ctor = function() {
+    var activator, _i, _len, _ref;
+    _ref = this.activators;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      activator = _ref[_i];
+      if (typeof this[activator] === "function") {
+        this[activator]();
       }
     }
-    return Module;
-  })();
-  proto = Spine.Module.prototype;
-  Spine.Module.prototype = Module.prototype;
-  Spine.Module.include = function(obj) {
+    return typeof this.init === "function" ? this.init.apply(this, arguments) : void 0;
+  };
+  construct = function(base, sub) {
+    return sub.prototype.constructor = base;
+  };
+  construct(ctor, Spine.Module);
+  construct(ctor, Spine.Model);
+  construct(ctor, Spine.Controller);
+  Spine.Module.prototype.activators = [];
+  Spine.Module.include = Spine.Model.include = Spine.Controller.include = function(obj) {
     var key, value, _ref;
     if (!obj) {
       throw 'include(obj) requires obj';
@@ -37,7 +35,9 @@
       value = obj[key];
       if (__indexOf.call(moduleKeywords, key) < 0) {
         if (key === "activators") {
-          this.prototype[key] = this.prototype[key].concat(value);
+          if (typeof this.prototype[key] !== "undefined") {
+            this.prototype[key] = this.prototype[key].concat(value);
+          }
         } else {
           this.prototype[key] = value;
         }
@@ -48,4 +48,5 @@
     }
     return this;
   };
+  Spine.Activator = true;
 }).call(this);
