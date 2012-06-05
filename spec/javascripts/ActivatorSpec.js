@@ -59,6 +59,17 @@ describe("Activate", function() {
 
 			expect(child.mod1activated).toBe(true);
 		});
+
+		it("should still work like a model", function() {
+			parent.include(mod1);
+
+			var child = parent.create();
+
+			var child2 = parent.find(child.id);
+
+			expect(child2.id).toBe(child.id);
+			expect(child2.eql(child)).toBe(true);
+		});
 	});
 
 	describe("for Spine.Controller", function() {
