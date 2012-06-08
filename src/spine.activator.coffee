@@ -9,9 +9,8 @@ ctor = ->
 construct = (base,sub) ->
 	sub::constructor = base
 
+
 construct(ctor,Spine.Module)
-construct(ctor,Spine.Model)
-construct(ctor,Spine.Controller)
 
 Spine.Module::activators = []
 

@@ -23,8 +23,6 @@
     return sub.prototype.constructor = base;
   };
   construct(ctor, Spine.Module);
-  construct(ctor, Spine.Model);
-  construct(ctor, Spine.Controller);
   Spine.Module.prototype.activators = [];
   Spine.Module.include = Spine.Model.include = Spine.Controller.include = function(obj) {
     var key, value, _ref;

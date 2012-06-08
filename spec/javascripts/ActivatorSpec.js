@@ -78,5 +78,10 @@ describe("Activate", function() {
 		});
 
 		Tests();
+
+		it("should still call the controller constructor", function() {
+			var child = parent.init({ test: "test" });
+			expect(child.test).toBe("test");
+		});
 	});
 });
